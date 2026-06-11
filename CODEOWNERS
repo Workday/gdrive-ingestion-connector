@@ -1,0 +1,12 @@
+# Code owners file
+# This file defines ownership of code in the repository
+# For more information, see: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global ownership - BT Data Platform team owns all files
+* @workday/bt-ai-engineering
+
+# Specific ownership for different directories (if needed in the future)
+# connectors/ @workday-inc/bt-data-platform
+# shared/ @workday/bt-ai-engineering
+# tests/ @workday/bt-ai-engineering
+# docs/ @workday/bt-ai-engineering
