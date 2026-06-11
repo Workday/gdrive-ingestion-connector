@@ -1,4 +1,4 @@
-# `gdrive_to_udl.py` — Technical Reference
+# `gdrive_to_volume_or_s3.py` — Technical Reference
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python&logoColor=white)
 ![Google Drive API](https://img.shields.io/badge/Google%20Drive%20API-v3-4285F4?logo=googledrive&logoColor=white)
@@ -8,7 +8,7 @@
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 
 **Author:** Shubhani Patil
-**Module path:** `gdrive_to_dbx_data_ingestion/gdrive_framework/gdrive_to_udl.py`
+**Module path:** `gdrive_to_dbx_data_ingestion/gdrive_framework/gdrive_to_volume_or_s3.py`
 **Last updated:** May 2026
 
 ---
@@ -36,7 +36,7 @@
 
 ## 1. Overview
 
-`gdrive_to_udl.py` is a Python utility for extracting files from Google Drive (including Shared Drives) and writing them to either:
+`gdrive_to_volume_or_s3.py` is a Python utility for extracting files from Google Drive (including Shared Drives) and writing them to either:
 
 - An **AWS S3 bucket** (via STS assume-role), or
 - A **Databricks Unity Catalog Volume** or any local filesystem path, or
@@ -46,7 +46,7 @@ It supports:
 - Listing metadata of all accessible files and folders.
 - Downloading individual files or entire folder trees (flat or hierarchy-preserving).
 - Exporting Google-native formats (Sheets, Docs, Slides, Drawings, Forms, Scripts, Jamboard, Sites) to open formats.
-- Programmatic use as a Python library (imported by `lcca_gdrive_to_udl.ipynb`).
+- Programmatic use as a Python library (imported by `lcca_gdrive_to_volume_or_s3.ipynb`).
 - CLI use as a standalone script.
 
 ---
@@ -113,7 +113,7 @@ These module-level constants control API behaviour and are not user-configurable
 | `API_NAME` | `"drive"` | Google API name |
 | `API_VERSION` | `"v3"` | Drive API version |
 | `SCOPES` | `["https://www.googleapis.com/auth/drive.readonly"]` | Read-only OAuth scope |
-| `JOB_NAME` | `"Gdrive_to_UDL"` | Prefix in all log messages |
+| `JOB_NAME` | `"gdrive_to_volume_or_s3"` | Prefix in all log messages |
 | `MIME_TYPE_FOLDER` | `application/vnd.google-apps.folder` | Used to detect folders in API responses |
 | `MIME_TYPE_SHORTCUT` | `application/vnd.google-apps.shortcut` | Used to detect and resolve shortcuts |
 | `MIME_TYPE_PDF` | `application/pdf` | Reused in export maps |
@@ -451,8 +451,8 @@ Google-native files get the export extension appended: e.g. `My Report.docx`.
 
 **Logging format:**
 ```
-2026-05-18 12:34:56 INFO: Gdrive_to_UDL Job ===> <message>
-2026-05-18 12:34:56 ERROR: Gdrive_to_UDL Job ===> <message>
+2026-05-18 12:34:56 INFO: gdrive_to_volume_or_s3 Job ===> <message>
+2026-05-18 12:34:56 ERROR: gdrive_to_volume_or_s3 Job ===> <message>
 ```
 
 ---
@@ -499,8 +499,8 @@ import importlib.util, sys, os
 
 # Load module from volume path
 spec = importlib.util.spec_from_file_location(
-    "gdrive_to_udl",
-    "/Volumes/udl_raw_dev/file_extracts/.../gdrive_to_udl.py"
+    "gdrive_to_volume_or_s3",
+    "/Volumes/udl_raw_dev/file_extracts/.../gdrive_to_volume_or_s3.py"
 )
 gdrive_framework = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(gdrive_framework)
@@ -528,14 +528,14 @@ result = gdrive_framework.download_and_write_output(
 ### 16.2 CLI — List All Files
 
 ```bash
-python gdrive_to_udl.py list \
+python gdrive_to_volume_or_s3.py list \
   --credentials_json '{"client_id":"...","client_secret":"...","refresh_token":"...","token_uri":"https://oauth2.googleapis.com/token"}'
 ```
 
 ### 16.3 CLI — Download Folder Flat to Volume
 
 ```bash
-python gdrive_to_udl.py download \
+python gdrive_to_volume_or_s3.py download \
   --credentials_json '<credentials_json>' \
   --ids <folder_id> \
   --volume_path /Volumes/udl_raw_dev/file_extracts/inbound/gdrive_lcca \
@@ -545,7 +545,7 @@ python gdrive_to_udl.py download \
 ### 16.4 CLI — Download Folder Preserving Hierarchy
 
 ```bash
-python gdrive_to_udl.py download-hierarchy \
+python gdrive_to_volume_or_s3.py download-hierarchy \
   --credentials_json '<credentials_json>' \
   --ids <folder_id> \
   --volume_path /Volumes/udl_raw_dev/file_extracts/inbound/gdrive_lcca
@@ -554,7 +554,7 @@ python gdrive_to_udl.py download-hierarchy \
 ### 16.5 CLI — Download to Both S3 and Volume
 
 ```bash
-python gdrive_to_udl.py download \
+python gdrive_to_volume_or_s3.py download \
   --credentials_json '<credentials_json>' \
   --ids <folder_id_1> <folder_id_2> \
   --s3_bucket my-raw-bucket \
@@ -563,7 +563,7 @@ python gdrive_to_udl.py download \
   --volume_path /Volumes/udl_raw_dev/file_extracts/inbound/gdrive_lcca
 ```
 
-### 16.6 Incremental Ingestion Pattern (used in `lcca_gdrive_to_udl.ipynb`)
+### 16.6 Incremental Ingestion Pattern (used in `lcca_gdrive_to_volume_or_s3.ipynb`)
 
 ```python
 # 1. List all files with paths for a Shared Drive folder
@@ -589,4 +589,4 @@ for f in incremental:
 
 ---
 
-*Generated from source: `gdrive_to_dbx_data_ingestion/gdrive_framework/gdrive_to_udl.py` — May 2026*
+*Generated from source: `gdrive_to_dbx_data_ingestion/gdrive_framework/gdrive_to_volume_or_s3.py` — May 2026*
